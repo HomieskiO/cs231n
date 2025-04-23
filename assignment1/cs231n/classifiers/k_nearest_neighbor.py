@@ -103,7 +103,7 @@ class KNearestNeighbor(object):
             #######################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-            pass
+            dists[i] = np.sqrt(np.sum(np.square(self.X_train - X[i]), axis=1))
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
@@ -133,7 +133,15 @@ class KNearestNeighbor(object):
         #########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        pass
+        # im doing a^2-2ab+b^2 with mm and broadcast sums
+        mm = (X @ self.X_train.T) * (-2)
+
+        a = np.sum(np.square(X), axis=1)
+        b = np.sum(np.square(self.X_train), axis=1)
+
+        # convert the 500 row vector (a) to (500,1) and 5000 row vector (b) to (1, 5000) so it can broadcast their sum
+        pixels_sum = mm + a[:, np.newaxis] + b[np.newaxis, :]
+        dists = np.sqrt(pixels_sum)
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
